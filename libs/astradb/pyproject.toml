@@ -12,7 +12,7 @@ license = "MIT"
 
 [tool.poetry.dependencies]
 python = ">=3.8.1,<4.0"
-langchain-core = ">=0.1.31,<0.3"
+langchain-core = { version = "^0.3.0.dev", allow-prereleases = true }
 astrapy = "^1.4"
 # Resolve numpy version for 3.8 to 3.12+
 numpy = [
@@ -31,9 +31,6 @@ pytest-mock = "^3.10.0"
 syrupy = "^4.0.2"
 pytest-watcher = "^0.3.4"
 pytest-asyncio = "^0.21.1"
-langchain = { git = "https://github.com/langchain-ai/langchain.git", subdirectory = "libs/langchain" }
-langchain-text-splitters = { git = "https://github.com/langchain-ai/langchain.git", subdirectory = "libs/text-splitters" }
-langchain-core = { git = "https://github.com/langchain-ai/langchain.git", subdirectory = "libs/core" }
 
 [tool.poetry.group.codespell]
 optional = true
@@ -54,13 +51,11 @@ ruff = "^0.6"
 
 [tool.poetry.group.typing.dependencies]
 mypy = "^0.991"
-langchain-core = { git = "https://github.com/langchain-ai/langchain.git", subdirectory = "libs/core" }
 
 [tool.poetry.group.dev]
 optional = true
 
 [tool.poetry.group.dev.dependencies]
-langchain-core = { git = "https://github.com/langchain-ai/langchain.git", subdirectory = "libs/core" }
 
 [tool.ruff.lint]
 pydocstyle.convention = "google"
