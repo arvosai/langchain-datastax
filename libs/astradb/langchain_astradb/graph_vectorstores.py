@@ -22,7 +22,7 @@ from langchain_core._api import beta
 from langchain_core.documents import Document
 from typing_extensions import override
 
-from langchain_astradb.utils.astradb import COMPONENT_NAME_GRAPHVECTORSTORE
+from langchain_astradb.utils.astradb import COMPONENT_NAME_GRAPHVECTORSTORE, SetupMode
 from langchain_astradb.utils.mmr_helper import MmrHelper
 from langchain_astradb.vectorstores import AstraDBVectorStore
 
@@ -33,7 +33,7 @@ if TYPE_CHECKING:
     from astrapy.info import CollectionVectorServiceOptions
     from langchain_core.embeddings import Embeddings
 
-    from langchain_astradb.utils.astradb import SetupMode
+
 
 DEFAULT_INDEXING_OPTIONS = {"allow": ["metadata"]}
 
@@ -308,11 +308,20 @@ class AstraDBGraphVectorStore(GraphVectorStore):
             )
 
             # attempt a query to see if the table is setup correctly
+            filter = {self.metadata_incoming_links_key : "test"}
 
             # how do we call this with aysnc if SetupMode == ASYNC???
-            self.metadata_search(filter = {
-                self.metadata_incoming_links_key : "test"
-            }, n=1)
+            if setup_mode == SetupMode.ASYNC:
+                try:
+                    loop = asyncio.get_event_loop()
+                except RuntimeError:
+                    # If no event loop is found, create a new one
+                    loop = asyncio.new_event_loop()
+                    asyncio.set_event_loop(loop)
+                task = asyncio.create_task(self.ametadata_search(filter=filter, n=1))
+                loop.run_until_complete(task)
+            else:
+                self.metadata_search(filter=filter, n=1)
         except BaseException as exp:
             print(type(exp))
 
