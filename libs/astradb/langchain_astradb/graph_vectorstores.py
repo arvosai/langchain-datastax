@@ -307,15 +307,19 @@ class AstraDBGraphVectorStore(GraphVectorStore):
                 async_astra_db_client=async_astra_db_client,
             )
 
-            # # attempt a query to see if the table is setup correctly
+            # attempt a query to see if the table is setup correctly
 
-            # self.metadata_search(filter = {
-            #     self.metadata_incoming_links_key : "test"
-            # }, n=1)
+            # how do we call this with aysnc if SetupMode == ASYNC???
+            self.metadata_search(filter = {
+                self.metadata_incoming_links_key : "test"
+            }, n=1)
         except BaseException as exp:
+            print(type(exp))
+
             # determine if error is because of a un-indexed column. Ref:
             # https://docs.datastax.com/en/astra-db-serverless/api-reference/collections.html#considerations-for-selective-indexing
             error_message = str(exp).lower()
+            print(error_message)
             if ("unindexed filter path" in error_message) or (
                 "incompatible with the requested indexing policy" in error_message
             ):
